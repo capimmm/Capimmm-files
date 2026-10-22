@@ -89,23 +89,19 @@
     display:flex;align-items:center;justify-content:space-between;gap:16px;
     margin-bottom:28px;flex-wrap:wrap;
     animation:rise 1s var(--ease) both;
+    position:relative;z-index:10;
   }
   .brand{display:flex;align-items:center;gap:14px}
   .brand-mark{
-    width:42px;height:42px;border-radius:12px;
-    background:linear-gradient(135deg,rgba(255,255,255,.18),rgba(255,255,255,.04));
+    width:44px;height:44px;border-radius:12px;
+    background:#e5e5e5;
     border:1px solid var(--stroke-2);
     display:grid;place-items:center;
     box-shadow:0 1px 0 rgba(255,255,255,.15) inset,0 12px 30px -10px rgba(255,255,255,.25);
     position:relative;overflow:hidden;
   }
-  .brand-mark::after{
-    content:"";position:absolute;inset:-50%;
-    background:conic-gradient(from 0deg,transparent,rgba(255,255,255,.25),transparent 30%);
-    animation:spin 8s linear infinite;
-  }
-  .brand-mark svg{position:relative;z-index:1;width:20px;height:20px}
-  @keyframes spin{to{transform:rotate(360deg)}}
+  .brand-mark svg{width:26px;height:26px;}
+  
   .brand-text{display:flex;flex-direction:column;gap:2px}
   .brand-title{font-size:15px;font-weight:600}
   .brand-sub{font-size:11.5px;color:var(--text-3);letter-spacing:.02em}
@@ -147,11 +143,12 @@
     -webkit-mask-composite:xor;mask-composite:exclude;padding:1px;
   }
 
-  /* ============ LOADING ============ */
+  /* ============ LOADING / FALLBACK ============ */
   .loading-card{
     padding:26px;border-radius:var(--radius-lg);
     animation:rise .8s var(--ease) both;
     display:flex;align-items:center;gap:16px;
+    position:relative;z-index:5;
   }
   .spinner-large{
     width:24px;height:24px;border-radius:50%;
@@ -159,10 +156,8 @@
     animation:spin .8s linear infinite;flex-shrink:0;
   }
   .loading-text{font-size:14px;color:var(--text-2)}
-  .loading-text strong{color:var(--text);font-weight:600}
 
-  /* ============ REPO INFO ============ */
-  .repo-info{padding:22px;border-radius:var(--radius-lg);margin-bottom:18px;animation:rise .8s var(--ease) both}
+  .repo-info{padding:22px;border-radius:var(--radius-lg);margin-bottom:18px;animation:rise .8s var(--ease) both;position:relative;z-index:5}
   .repo-info-inner{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
   .repo-avatar{width:52px;height:52px;border-radius:14px;border:1px solid var(--stroke-2);background:rgba(255,255,255,.05);flex-shrink:0}
   .repo-text{flex:1;min-width:200px}
@@ -175,8 +170,8 @@
   .repo-stat svg{width:13px;height:13px;opacity:.7}
   .lang-dot{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.7);box-shadow:0 0 8px rgba(255,255,255,.5)}
 
-  /* ============ TOOLBAR ============ */
-  .toolbar{display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap;animation:rise .8s var(--ease) both}
+  /* ============ TOOLBAR (Z-INDEX FIX) ============ */
+  .toolbar{display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap;animation:rise .8s var(--ease) both;position:relative;z-index:100;}
   .toolbar-search{flex:1;min-width:180px;position:relative}
   .toolbar-search input{
     width:100%;padding:11px 14px 11px 38px;border-radius:12px;
@@ -189,7 +184,7 @@
   .toolbar-search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:14px;height:14px;color:var(--text-3);pointer-events:none}
 
   /* Custom Select */
-  .custom-select{position:relative;user-select:none}
+  .custom-select{position:relative;user-select:none;z-index:101}
   .select-trigger{
     display:flex;align-items:center;justify-content:space-between;gap:10px;
     padding:11px 14px;border-radius:12px;border:1px solid var(--stroke-1);
@@ -203,11 +198,11 @@
   .custom-select.open .select-trigger svg{transform:rotate(180deg)}
   .select-menu{
     position:absolute;top:calc(100% + 6px);right:0;width:100%;min-width:160px;
-    border-radius:12px;background:rgba(20,20,20,.9);border:1px solid var(--stroke-2);
+    border-radius:12px;background:rgba(20,20,20,.95);border:1px solid var(--stroke-2);
     backdrop-filter:blur(var(--blur-md));-webkit-backdrop-filter:blur(var(--blur-md));
     box-shadow:0 10px 30px -10px rgba(0,0,0,.8);
     opacity:0;visibility:hidden;transform:translateY(-10px) scale(.98);
-    transition:all .3s var(--ease-spring);z-index:100;overflow:hidden;padding:6px;
+    transition:all .3s var(--ease-spring);z-index:102;overflow:hidden;padding:6px;
   }
   .custom-select.open .select-menu{opacity:1;visibility:visible;transform:translateY(0) scale(1)}
   .select-option{
@@ -229,7 +224,7 @@
   .toggle-inline input:checked ~ .dot-toggle{background:#fff;box-shadow:0 0 8px rgba(255,255,255,.9)}
 
   /* ============ FOLDER CHIPS ============ */
-  .folder-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;animation:rise .6s var(--ease) both}
+  .folder-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;animation:rise .6s var(--ease) both;position:relative;z-index:5}
   .folder-chips:empty{display:none}
   .chip{
     font-size:12px;padding:7px 12px;border-radius:999px;border:1px solid var(--stroke-1);
@@ -241,7 +236,7 @@
   .chip.active{color:#000;background:#fff;border-color:#fff}
 
   /* ============ LISTA ============ */
-  .files{display:grid;gap:10px;grid-template-columns:1fr}
+  .files{display:grid;gap:10px;grid-template-columns:1fr;position:relative;z-index:1}
   .card{
     --mx:50%;--my:50%;position:relative;display:flex;align-items:center;gap:14px;padding:16px 18px;
     border-radius:var(--radius-md);background:linear-gradient(135deg,rgba(255,255,255,.055) 0%,rgba(255,255,255,.02) 100%);
@@ -305,19 +300,27 @@
   .modal{
     width:100%;max-width:1000px;height:90vh;border-radius:var(--radius-lg);
     display:flex;flex-direction:column;transform:scale(.96) translateY(20px);
-    transition:transform .4s var(--ease-spring);
+    transition:transform .4s var(--ease-spring), max-width .4s var(--ease), height .4s var(--ease), border-radius .4s var(--ease);
   }
   .modal-overlay.open .modal{transform:scale(1) translateY(0)}
+  
+  /* Quase Tela Cheia */
+  .modal.maximized{max-width:98vw;height:98vh;border-radius:16px;}
+
   .modal-header{
     display:flex;align-items:center;justify-content:space-between;padding:16px 20px;
     border-bottom:1px solid var(--stroke-1);
   }
-  .modal-title{font-size:15px;font-weight:600;display:flex;align-items:center;gap:10px}
-  .modal-close{
+  .modal-title{font-size:15px;font-weight:600;display:flex;align-items:center;gap:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .modal-actions{display:flex;gap:8px;align-items:center;}
+  .modal-btn{
     width:32px;height:32px;border-radius:50%;display:grid;place-items:center;
     background:rgba(255,255,255,.05);color:var(--text-2);transition:all .2s;
   }
-  .modal-close:hover{background:rgba(255,255,255,.15);color:#fff;transform:rotate(90deg)}
+  .modal-btn:hover{background:rgba(255,255,255,.15);color:#fff;}
+  .modal-btn.close:hover{transform:rotate(90deg);}
+  .modal-btn svg{width:16px;height:16px;}
+  
   .modal-tabs{display:flex;gap:6px;padding:12px 20px 0;border-bottom:1px solid var(--stroke-1)}
   .modal-tab{
     padding:8px 16px;font-size:13px;font-weight:600;color:var(--text-3);
@@ -325,15 +328,15 @@
   }
   .modal-tab:hover{color:var(--text-2)}
   .modal-tab.active{color:#fff;border-bottom-color:#fff}
-  .modal-body{flex:1;position:relative;overflow:hidden;border-radius:0 0 var(--radius-lg) var(--radius-lg);background:#0a0a0a}
-  .modal-body iframe{width:100%;height:100%;border:0;background:#fff}
+  .modal-body{flex:1;position:relative;overflow:hidden;border-radius:0 0 var(--radius-lg) var(--radius-lg);background:#0a0a0a;display:flex;flex-direction:column;}
+  .modal-body iframe{width:100%;height:100%;border:0;background:#fff;flex:1;}
   .modal-body pre{
     width:100%;height:100%;overflow:auto;padding:20px;margin:0;
     font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:13px;line-height:1.6;color:#e6edf3;
-    tab-size:2;
+    tab-size:2;flex:1;
   }
   .modal-body img, .modal-body video{
-    width:100%;height:100%;object-fit:contain;background:#000;
+    width:100%;height:100%;object-fit:contain;background:#000;flex:1;
   }
   .modal-body .hidden{display:none !important}
 
@@ -362,17 +365,16 @@
     transition:transform .3s var(--ease-spring);
   }
   .pix-widget:hover{transform:translateY(-4px)}
-  .pix-qr{
-    width:48px;height:48px;border-radius:10px;
+  .pix-img{
+    width:56px;height:56px;border-radius:10px;
     border:2px solid rgba(255,255,255,.2);
-    background:#fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23fff'/><path d='M10 10h20v20H10zM70 10h20v20H70zM10 70h20v20H10zM40 40h20v20H40z' fill='%23000'/><path d='M15 15h10v10H15zM75 15h10v10H75zM15 75h10v10H15z' fill='%23fff'/></svg>") center/cover no-repeat;
-    box-shadow:0 4px 12px rgba(0,0,0,.5);
-    cursor:pointer;
+    object-fit:cover;box-shadow:0 4px 12px rgba(0,0,0,.5);
+    background:#fff;
   }
   .pix-label{font-size:9px;color:var(--text-3);text-transform:uppercase;letter-spacing:.1em;font-weight:600}
 
   /* ============ EMPTY / FALLBACK ============ */
-  .empty-state{text-align:center;padding:56px 20px;animation:rise .8s var(--ease) both}
+  .empty-state{text-align:center;padding:56px 20px;animation:rise .8s var(--ease) both;position:relative;z-index:5;}
   .empty-icon{
     width:72px;height:72px;border-radius:20px;background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.02));
     border:1px solid var(--stroke-1);display:grid;place-items:center;margin:0 auto 20px;
@@ -385,7 +387,7 @@
   .empty-state p{font-size:13px;color:var(--text-2);line-height:1.6;max-width:420px;margin:0 auto}
   .empty-state code{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:12px;padding:2px 8px;border-radius:6px;background:rgba(255,255,255,.08);border:1px solid var(--stroke-1);color:var(--text)}
 
-  .fallback{padding:22px;border-radius:var(--radius-lg);animation:rise .9s var(--ease) both}
+  .fallback{padding:22px;border-radius:var(--radius-lg);animation:rise .9s var(--ease) both;position:relative;z-index:5;}
   .fallback h2{font-size:15px;font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:8px}
   .fallback h2 svg{width:16px;height:16px;color:var(--text-2)}
   .fallback p{font-size:13px;color:var(--text-2);line-height:1.6;margin-bottom:16px}
@@ -447,9 +449,10 @@
     .card-open{padding:8px 10px}
     .toasts{right:16px;bottom:16px;left:16px}
     .toast{max-width:none}
-    .modal{height:100%;border-radius:0}
+    .modal{height:100%;border-radius:0;max-width:100vw;}
     .modal-overlay{padding:0}
     .modal-header{border-radius:0}
+    .modal.maximized{max-width:100vw;height:100vh;border-radius:0;}
   }
 
   @media (prefers-reduced-motion:reduce){
@@ -472,10 +475,12 @@
   <header class="header">
     <div class="brand">
       <div class="brand-mark" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-          <polyline points="14 2 14 8 20 8"/>
-          <path d="M8 13h8M8 17h5" opacity=".55"/>
+        <!-- Nova Logo baseada na imagem -->
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 20 80 L 80 20 L 80 50 L 50 80 Z" fill="#000" />
+          <path d="M 80 20 L 80 80 L 50 80 Z" fill="#333" />
+          <circle cx="20" cy="55" r="12" fill="#000" />
+          <path d="M 40 80 L 50 68 L 60 80 Z" fill="#fff" />
         </svg>
       </div>
       <div class="brand-text">
@@ -493,20 +498,18 @@
     </a>
   </header>
 
-  <!-- Loading -->
   <section class="loading-card glass" id="loadingCard">
     <div class="spinner-large"></div>
     <div class="loading-text">Detectando repositório…</div>
   </section>
 
-  <!-- Fallback -->
   <section class="fallback glass hidden" id="fallbackCard">
-    <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Não consegui detectar o repositório</h2>
-    <p id="fallbackMsg">Esta página precisa estar em uma URL do GitHub Pages (ex: <code>usuario.github.io/repo</code>) para a detecção automática funcionar.</p>
+    <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Não consegui detectar</h2>
+    <p id="fallbackMsg">Esta página precisa estar em uma URL do GitHub Pages para detectar o repositório.</p>
     <div class="fallback-row">
       <div class="input-wrap">
-        <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-3.5-3.5"/></svg>
-        <input id="manualInput" type="text" autocomplete="off" spellcheck="false" placeholder="usuario/repo">
+        <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-3.5-3.5"/></svg>
+        <input id="manualInput" type="text" autocomplete="off" placeholder="usuario/repo">
       </div>
       <button id="manualBtn" class="btn btn-primary" type="button"><span>Carregar</span><div class="spinner"></div></button>
     </div>
@@ -516,15 +519,14 @@
   
   <section class="toolbar hidden" id="toolbar">
     <div class="toolbar-search">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-3.5-3.5"/></svg>
-      <input id="filterInput" type="text" placeholder="Filtrar arquivos…" autocomplete="off" spellcheck="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-3.5-3.5"/></svg>
+      <input id="filterInput" type="text" placeholder="Filtrar arquivos…" autocomplete="off">
     </div>
     
-    <!-- Custom Select -->
     <div class="custom-select" id="customSort">
       <button class="select-trigger" id="sortTrigger">
         <span id="sortLabel">Nome A-Z</span>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
       </button>
       <div class="select-menu" id="sortMenu">
         <div class="select-option active" data-value="name">Nome A-Z</div>
@@ -548,7 +550,7 @@
 
   <section class="empty-state hidden" id="emptyState">
     <div class="empty-icon" aria-hidden="true">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
     </div>
     <h2 id="emptyTitle">Nada aqui</h2>
     <p id="emptyMsg">—</p>
@@ -557,12 +559,17 @@
 
 <!-- Modal Viewer -->
 <div class="modal-overlay hidden" id="modalOverlay">
-  <div class="modal glass">
+  <div class="modal glass" id="modalBox">
     <header class="modal-header">
       <div class="modal-title" id="modalTitle">Arquivo</div>
-      <button class="modal-close" id="modalClose">
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
+      <div class="modal-actions">
+        <button class="modal-btn" id="modalMaximize" title="Tela Cheia">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+        </button>
+        <button class="modal-btn close" id="modalClose" title="Fechar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
     </header>
     <div class="modal-tabs hidden" id="modalTabs">
       <button class="modal-tab active" data-tab="preview">Preview</button>
@@ -591,9 +598,10 @@
   </div>
 </div>
 
-<!-- Pix Widget (Canto inferior esquerdo) -->
+<!-- Pix Widget -->
 <div class="pix-widget" title="Pix">
-  <div class="pix-qr" onclick="navigator.clipboard.writeText('pix@exemplo.com'); alert('Chave Pix copiada!')"></div>
+  <img src="./pix.jpg" alt="Pix" class="pix-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+  <span class="pix-label" style="display:none; color:red; font-size:10px;">Falta pix.jpg</span>
   <span class="pix-label">Pix</span>
 </div>
 
@@ -661,25 +669,13 @@
     el.innerHTML = `<span class="toast-icon">${icons[type] || icons.info}</span><span>${escapeHtml(message)}</span>`;
     $('#toasts').appendChild(el);
     requestAnimationFrame(() => el.classList.add('in'));
-    setTimeout(() => {
-      el.classList.remove('in');
-      setTimeout(() => el.remove(), 400);
-    }, 3400);
+    setTimeout(() => { el.classList.remove('in'); setTimeout(() => el.remove(), 400); }, 3400);
   }
 
   /* ============ ESTADO ============ */
   const state = {
-    source: null,
-    info: null,
-    files: [],
-    branch: null,
-    hasPages: false,
-    pagesPrefix: '',
-    repoBaseUrl: null,
-    query: '',
-    sort: 'name',
-    activeFolder: null,
-    loading: false
+    source: null, info: null, files: [], branch: null, hasPages: false,
+    pagesPrefix: '', repoBaseUrl: null, query: '', sort: 'name', activeFolder: null, loading: false
   };
 
   /* ============ API ============ */
@@ -687,7 +683,7 @@
     const res = await fetch(url, { headers: { 'Accept': 'application/vnd.github+json' } });
     if (!res.ok) {
       if (res.status === 404) throw new Error('Não encontrado (repositório precisa ser público).');
-      if (res.status === 403) throw new Error('Limite de requisições do GitHub atingido. Tente em minutos.');
+      if (res.status === 403) throw new Error('Limite de requisições do GitHub atingido.');
       throw new Error(`Erro da API: ${res.status}`);
     }
     return res.json();
@@ -702,9 +698,7 @@
     if (host.endsWith('.github.io')) {
       const owner = host.slice(0, -'.github.io'.length);
       const candidates = [];
-      if (parts.length > 0) {
-        candidates.push({ owner, repo: parts[0], source: 'pages', baseUrl: `/${parts[0]}/`, pathname: url.pathname });
-      }
+      if (parts.length > 0) candidates.push({ owner, repo: parts[0], source: 'pages', baseUrl: `/${parts[0]}/`, pathname: url.pathname });
       candidates.push({ owner, repo: `${owner}.github.io`, source: 'pages', baseUrl: '/', pathname: url.pathname });
 
       for (const c of candidates) {
@@ -721,14 +715,9 @@
   async function load(source) {
     if (state.loading) return;
     state.loading = true;
-    hideFallback();
-    showLoading('Consultando repositório…');
-    hideEmpty();
-    $('#repoInfo').classList.add('hidden');
-    $('#toolbar').classList.add('hidden');
-    $('#folderChips').innerHTML = '';
-    $('#files').innerHTML = '';
-    $('#sourcePill').classList.add('hidden');
+    hideFallback(); showLoading('Consultando repositório…'); hideEmpty();
+    $('#repoInfo').classList.add('hidden'); $('#toolbar').classList.add('hidden');
+    $('#folderChips').innerHTML = ''; $('#files').innerHTML = ''; $('#sourcePill').classList.add('hidden');
     state.activeFolder = null;
 
     try {
@@ -750,56 +739,39 @@
       showLoading('Listando arquivos…');
       const tree = await api(`https://api.github.com/repos/${source.owner}/${source.repo}/git/trees/${encodeURIComponent(branch)}?recursive=1`);
       
-      // Filtra arquivos: HTML, Imagens e Vídeos. EXCLUI index.html
+      // Filtra: Apenas HTML, Imagens, Vídeos. EXCLUI index.html. OBRIGA estar na pasta "files/"
       const fileRegex = /\.(html?|png|jpe?g|gif|webp|svg|mp4|webm|mp3)$/i;
       let files = (tree.tree || []).filter(f => {
         if (f.type !== 'blob' || !fileRegex.test(f.path)) return false;
+        
+        // REGRA DA PASTA "files/"
+        if (!f.path.toLowerCase().startsWith('files/')) return false;
+
         const name = f.path.split('/').pop().toLowerCase();
         if (name === 'index.html' || name === 'index.htm') return false;
         return true;
       });
 
-      if (source.source === 'pages' && !pagesPrefix && source.baseUrl) {
-        const currentPath = decodeURIComponent(location.pathname);
-        const currentRel = currentPath.slice(source.baseUrl.length);
-        if (currentRel && !(tree.tree || []).some(f => f.path === currentRel)) {
-          const candidates = (tree.tree || []).filter(f => f.type === 'blob' && (f.path.endsWith('/' + currentRel) || f.path === currentRel));
-          if (candidates.length > 0) {
-            const found = candidates[0].path;
-            pagesPrefix = found.slice(0, found.length - currentRel.length);
-          }
-        }
-      }
-
-      state.source = source;
-      state.info = info;
-      state.branch = branch;
-      state.hasPages = hasPages;
-      state.pagesPrefix = pagesPrefix;
-      state.repoBaseUrl = source.baseUrl || null;
+      state.source = source; state.info = info; state.branch = branch; state.hasPages = hasPages;
+      state.pagesPrefix = pagesPrefix; state.repoBaseUrl = source.baseUrl || null;
       
       state.files = files.map(f => {
         const p = f.path.split('/');
         const name = p.pop();
-        return { path: f.path, name, folder: p.join('/'), size: f.size || 0, ext: name.split('.').pop().toLowerCase() };
+        // Remove a palavra "files" do caminho exibido na interface para ficar mais limpo
+        const folder = p.join('/').replace(/^files\/?/, ''); 
+        return { path: f.path, name, folder, size: f.size || 0, ext: name.split('.').pop().toLowerCase() };
       });
 
-      hideLoading();
-      renderSourcePill();
-      renderRepoInfo();
-      renderToolbar();
-      renderFolderChips();
-      renderFiles();
+      hideLoading(); renderSourcePill(); renderRepoInfo(); renderToolbar(); renderFolderChips(); renderFiles();
 
       if (!files.length) {
-        showEmpty('Nenhum arquivo', `O repositório ${source.owner}/${source.repo} não tem arquivos válidos.`);
+        showEmpty('Nenhum arquivo na pasta files/', 'Adicione arquivos HTML, imagens ou vídeos dentro da pasta <code>files/</code> do repositório.');
       } else {
         toast(`${files.length} arquivo(s) pronto(s).`, 'success');
       }
     } catch (err) {
-      hideLoading();
-      showFallback('Não consegui carregar esse repositório.', err.message);
-      toast(err.message || 'Falha ao carregar.', 'error');
+      hideLoading(); showFallback('Não consegui carregar esse repositório.', err.message); toast(err.message || 'Falha ao carregar.', 'error');
     } finally {
       state.loading = false;
     }
@@ -808,20 +780,17 @@
   /* ============ UI ============ */
   function showLoading(text) { const c = $('#loadingCard'); c.classList.remove('hidden'); c.querySelector('.loading-text').textContent = text; }
   function hideLoading() { $('#loadingCard').classList.add('hidden'); }
-  function showFallback(msg, detail) { hideLoading(); $('#fallbackCard').classList.remove('hidden'); if (detail) $('#fallbackMsg').innerHTML = `${escapeHtml(detail)}<br><br>Você também pode informar manualmente:`; }
+  function showFallback(msg, detail) { hideLoading(); $('#fallbackCard').classList.remove('hidden'); if (detail) $('#fallbackMsg').innerHTML = `${escapeHtml(detail)}<br><br>Informe manualmente:`; }
   function hideFallback() { $('#fallbackCard').classList.add('hidden'); }
-  function showEmpty(title, msg) { $('#emptyState').classList.remove('hidden'); $('#emptyTitle').textContent = title; $('#emptyMsg').textContent = msg; }
+  function showEmpty(title, msg) { $('#emptyState').classList.remove('hidden'); $('#emptyTitle').textContent = title; $('#emptyMsg').innerHTML = msg; }
   function hideEmpty() { $('#emptyState').classList.add('hidden'); }
 
   function renderSourcePill() {
     const pill = $('#sourcePill'), { source, info, branch } = state;
     if (!source || !info) return;
-    pill.classList.remove('hidden');
-    pill.href = info.html_url;
-    $('#sourceAvatar').src = info.owner.avatar_url;
-    $('#sourceName').textContent = info.full_name;
-    $('#sourceBranch').textContent = branch;
-    $('#sourceBranch').classList.remove('hidden');
+    pill.classList.remove('hidden'); pill.href = info.html_url;
+    $('#sourceAvatar').src = info.owner.avatar_url; $('#sourceName').textContent = info.full_name;
+    $('#sourceBranch').textContent = branch; $('#sourceBranch').classList.remove('hidden');
   }
 
   function renderRepoInfo() {
@@ -849,6 +818,7 @@
   function renderToolbar() { $('#toolbar').classList.remove('hidden'); }
 
   function renderFolderChips() {
+    // Só mostra chips se houver subpastas DENTRO da pasta "files"
     const folders = Array.from(new Set(state.files.map(f => f.folder).filter(Boolean))).sort();
     const wrap = $('#folderChips');
     if (!folders.length) { wrap.innerHTML = ''; return; }
@@ -860,21 +830,16 @@
   }
 
   /* ============ CUSTOM SELECT ============ */
-  const sortLabels = {
-    'name': 'Nome A-Z', 'name-desc': 'Nome Z-A', 'path': 'Caminho',
-    'size-desc': 'Tamanho (Maior)', 'size': 'Tamanho (Menor)', 'ext': 'Extensão'
-  };
+  const sortLabels = { 'name': 'Nome A-Z', 'name-desc': 'Nome Z-A', 'path': 'Caminho', 'size-desc': 'Tamanho (Maior)', 'size': 'Tamanho (Menor)', 'ext': 'Extensão' };
   $('#sortTrigger').addEventListener('click', e => { e.stopPropagation(); $('#customSort').classList.toggle('open'); });
   document.addEventListener('click', () => $('#customSort').classList.remove('open'));
   
   $('#sortMenu').querySelectorAll('.select-option').forEach(opt => {
     opt.addEventListener('click', () => {
       $('#sortMenu').querySelectorAll('.select-option').forEach(o => o.classList.remove('active'));
-      opt.classList.add('active');
-      state.sort = opt.dataset.value;
+      opt.classList.add('active'); state.sort = opt.dataset.value;
       $('#sortLabel').textContent = sortLabels[state.sort];
-      $('#customSort').classList.remove('open');
-      renderFiles();
+      $('#customSort').classList.remove('open'); renderFiles();
     });
   });
 
@@ -925,7 +890,6 @@
       const pages = pagesUrlOf(f);
       const isMedia = /\.(png|jpe?g|gif|webp|svg|mp4|webm|mp3)$/i.test(f.name);
 
-      // Define o ícone baseado na extensão
       let iconSvg = `<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M8 13h8M8 17h5" opacity=".5"/>`;
       if (/\.(png|jpe?g|gif|webp|svg)$/i.test(f.name)) iconSvg = `<rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>`;
       if (/\.(mp4|webm)$/i.test(f.name)) iconSvg = `<polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>`;
@@ -954,14 +918,12 @@
       `;
       card.querySelector('.card-name').textContent = f.name;
 
-      // Ação principal: Abrir Modal
       const openModal = () => openViewerModal(f, rawUrl);
       card.addEventListener('click', e => {
         if (e.target.closest('.copy-btn') || e.target.closest('.card-open')) return;
         openModal();
       });
 
-      // Botão Copiar
       const copyBtn = card.querySelector('.copy-btn');
       copyBtn.addEventListener('click', async e => {
         e.stopPropagation();
@@ -973,23 +935,19 @@
         } catch { toast('Não foi possível copiar.', 'error'); }
       });
 
-      // Spotlight Effect
       card.addEventListener('mousemove', e => {
         const r = card.getBoundingClientRect();
         card.style.setProperty('--mx', ((e.clientX - r.left) / r.width) * 100 + '%');
         card.style.setProperty('--my', ((e.clientY - r.top) / r.height) * 100 + '%');
       });
 
-      // Custom Context Menu (Botão Direito)
       card.addEventListener('contextmenu', e => {
-        e.preventDefault();
-        e.stopPropagation();
+        e.preventDefault(); e.stopPropagation();
         const menu = $('#contextMenu');
         menu.classList.add('open');
         menu.style.left = `${Math.min(e.clientX, window.innerWidth - 180)}px`;
         menu.style.top = `${Math.min(e.clientY, window.innerHeight - 120)}px`;
         
-        // Ações do menu
         menu.querySelector('[data-action="view"]').onclick = () => { openModal(); menu.classList.remove('open'); };
         menu.querySelector('[data-action="code"]').onclick = () => { openViewerModal(f, rawUrl, 'code'); menu.classList.remove('open'); };
         menu.querySelector('[data-action="copy"]').onclick = () => { navigator.clipboard.writeText(pages || rawUrl); toast('Link copiado!', 'success'); menu.classList.remove('open'); };
@@ -1001,6 +959,7 @@
 
   /* ============ MODAL VIEWER ============ */
   const modal = $('#modalOverlay');
+  const modalBox = $('#modalBox');
   const modalTabs = $('#modalTabs');
   const iframe = $('#previewFrame');
   const codeBlock = $('#codeBlock');
@@ -1013,23 +972,23 @@
     setTimeout(() => {
       modal.classList.add('hidden');
       iframe.src = ''; iframe.srcdoc = '';
-      codeContent.textContent = '';
-      imgPreview.src = '';
-      videoPreview.src = '';
+      codeContent.textContent = ''; imgPreview.src = ''; videoPreview.src = '';
+      modalBox.classList.remove('maximized'); // Reseta estado de tela cheia
     }, 400);
   }
 
   $('#modalClose').addEventListener('click', closeModal);
   modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
 
-  modalTabs.querySelectorAll('.modal-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      modalTabs.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      const target = tab.dataset.tab;
-      if (target === 'preview') { iframe.classList.remove('hidden'); codeBlock.classList.add('hidden'); }
-      else { iframe.classList.add('hidden'); codeBlock.classList.remove('hidden'); }
-    });
+  // Botão Maximizar
+  $('#modalMaximize').addEventListener('click', () => {
+    modalBox.classList.toggle('maximized');
+    const icon = $('#modalMaximize').querySelector('svg');
+    if (modalBox.classList.contains('maximized')) {
+      icon.innerHTML = `<path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/>`; // Ícone de encolher
+    } else {
+      icon.innerHTML = `<path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>`; // Ícone de expandir
+    }
   });
 
   async function openViewerModal(file, rawUrl, forceTab = 'preview') {
@@ -1037,10 +996,10 @@
     requestAnimationFrame(() => modal.classList.add('open'));
     $('#modalTitle').textContent = file.name;
 
-    // Reset
     iframe.classList.add('hidden'); codeBlock.classList.add('hidden');
     imgPreview.classList.add('hidden'); videoPreview.classList.add('hidden');
     modalTabs.classList.add('hidden');
+    videoPreview.style.height = '100%'; videoPreview.style.marginTop = '0';
 
     const isHtml = /\.(html?)$/i.test(file.name);
     const isImage = /\.(png|jpe?g|gif|webp|svg)$/i.test(file.name);
@@ -1049,26 +1008,23 @@
 
     if (isHtml) {
       modalTabs.classList.remove('hidden');
-      // Define aba inicial
       const activeTab = forceTab === 'code' ? 'code' : 'preview';
       modalTabs.querySelectorAll('.modal-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === activeTab));
       
       if (activeTab === 'preview') iframe.classList.remove('hidden');
       else codeBlock.classList.remove('hidden');
 
-      // Busca o código para o preview e para a aba de código
       try {
         const res = await fetch(rawUrl);
         let text = await res.text();
         
-        // Injeta uma base para o preview funcionar links relativos
+        // Injeta uma base para links relativos
         const baseUrl = rawUrl.substring(0, rawUrl.lastIndexOf('/') + 1);
         text = text.replace('<head>', `<head><base href="${baseUrl}">`);
 
         if (activeTab === 'preview') iframe.srcdoc = text;
         codeContent.textContent = text;
         
-        // Se mudar de aba, atualiza o iframe
         modalTabs.querySelectorAll('.modal-tab').forEach(tab => {
           tab.onclick = () => {
             modalTabs.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
@@ -1083,23 +1039,14 @@
           };
         });
       } catch {
-        iframe.srcdoc = `<body style="background:#111;color:#fff;display:grid;place-items:center;height:100vh;font-family:sans-serif;">Erro ao carregar preview.</body>`;
+        iframe.srcdoc = `<body style="background:#111;color:#fff;display:grid;place-items:center;height:100vh;font-family:sans-serif;">Erro ao carregar.</body>`;
       }
     } 
-    else if (isImage) {
-      imgPreview.src = rawUrl;
-      imgPreview.classList.remove('hidden');
-    } 
-    else if (isVideo) {
-      videoPreview.src = rawUrl;
-      videoPreview.classList.remove('hidden');
-    }
+    else if (isImage) { imgPreview.src = rawUrl; imgPreview.classList.remove('hidden'); } 
+    else if (isVideo) { videoPreview.src = rawUrl; videoPreview.classList.remove('hidden'); }
     else if (isAudio) {
-      // Se for áudio, usa o player de vídeo escondendo o vídeo ou apenas toca
-      videoPreview.src = rawUrl;
-      videoPreview.classList.remove('hidden');
-      videoPreview.style.height = 'auto';
-      videoPreview.style.marginTop = '20px';
+      videoPreview.src = rawUrl; videoPreview.classList.remove('hidden');
+      videoPreview.style.height = 'auto'; videoPreview.style.marginTop = '20px';
     }
   }
 
@@ -1115,7 +1062,6 @@
     });
   }, { passive: true });
 
-  // Fechar context menu ao clicar em qualquer lugar
   document.addEventListener('click', () => $('#contextMenu').classList.remove('open'));
 
   /* ============ EVENTOS ============ */
@@ -1136,8 +1082,7 @@
       if (!source) { hideLoading(); showFallback('Esta página não parece estar em um repositório do GitHub.'); return; }
       await load(source);
     } catch (err) {
-      hideLoading();
-      showFallback('Falha ao detectar o repositório.', err.message);
+      hideLoading(); showFallback('Falha ao detectar.', err.message);
     }
   })();
 })();
