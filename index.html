@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>HTML Launcher · este repositório</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+  :root{
+    --text: rgba(255,255,255,.96);
+    --text-2: rgba(255,255,255,.62);
+    --text-3: rgba(255,255,255,.4);
+    --text-4: rgba(255,255,255,.25);
+    --stroke-1: rgba(255,255,255,.08);
+    --stroke-2: rgba(255,255,255,.14);
+    --stroke-3: rgba(255,255,255,.24);
+    --glass-1: rgba(255,255,255,.045);
+    --glass-2: rgba(255,255,255,.08);
+    --blur-lg: 28px;
+    --blur-md: 18px;
+    --blur-sm: 10px;
+    --radius-lg: 22px;
+    --radius-md: 16px;
+    --ease: cubic-bezier(.22,1,.36,1);
+    --ease-spring: cubic-bezier(.34,1.56,.64,1);
+    --ease-smooth: cubic-bezier(.4,0,.2,1);
+    --cursor-x: 50vw;
+    --cursor-y: 50vh;
+  }
+
+  html{color-scheme:dark}
+  html,body{height:100%}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI Variable","Segoe UI",Roboto,system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    text-rendering:optimizeLegibility;
+    background:#000;
+    color:var(--text);
+    min-height:100vh;
+    overflow-x:hidden;
+    position:relative;
+    isolation:isolate;
+    letter-spacing:-.01em;
+  }
+  ::selection{background:rgba(255,255,255,.9);color:#000}
+  button,input,select{font:inherit;color:inherit}
+  button{cursor:pointer;border:0;background:none}
+  a{color:inherit;text-decoration:none}
+  svg{display:block}
+  *:focus-visible{outline:2px solid rgba(255,255,255,.55);outline-offset:3px;border-radius:6px}
+
+  /* ============ FUNDO ============ */
+  .bg{position:fixed;inset:0;z-index:-2;overflow:hidden;pointer-events:none}
+  .orb{
+    position:absolute;border-radius:50%;
+    filter:blur(90px);mix-blend-mode:screen;
+    animation:drift 30s var(--ease) infinite alternate;
+    will-change:transform;
+  }
+  .orb-1{width:70vmax;height:70vmax;top:-20%;left:-20%;
+    background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.55),rgba(255,255,255,0) 65%)}
+  .orb-2{width:60vmax;height:60vmax;bottom:-25%;right:-20%;
+    background:radial-gradient(circle at 70% 60%,rgba(255,255,255,.4),rgba(255,255,255,0) 60%);
+    animation-duration:38s;animation-delay:-8s}
+  .orb-3{width:50vmax;height:50vmax;top:30%;left:40%;opacity:.8;
+    background:radial-gradient(circle at 50% 50%,rgba(255,255,255,.3),rgba(255,255,255,0) 60%);
+    animation-duration:46s;animation-delay:-16s}
+  @keyframes drift{
+    0%{transform:translate3d(0,0,0) scale(1)}
+    50%{transform:translate3d(6vw,-4vh,0) scale(1.12)}
+    100%{transform:translate3d(-5vw,6vh,0) scale(.94)}
+  }
+  .bg-noise{
+    position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.07;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='1' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+  .cursor-glow{
+    position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background:radial-gradient(800px circle at var(--cursor-x) var(--cursor-y),
+      rgba(255,255,255,.05),transparent 70%);
+  }
+
+  /* ============ LAYOUT ============ */
+  .app{max-width:1040px;margin:0 auto;padding:36px 22px 100px}
+
+  /* ============ HEADER ============ */
+  .header{
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    margin-bottom:28px;flex-wrap:wrap;
+    animation:rise 1s var(--ease) both;
+  }
+  .brand{display:flex;align-items:center;gap:14px}
+  .brand-mark{
+    width:42px;height:42px;border-radius:12px;
+    background:linear-gradient(135deg,rgba(255,255,255,.18),rgba(255,255,255,.04));
+    border:1px solid var(--stroke-2);
+    display:grid;place-items:center;
+    box-shadow:0 1px 0 rgba(255,255,255,.15) inset,
+               0 12px 30px -10px rgba(255,255,255,.25);
+    position:relative;overflow:hidden;
+  }
+  .brand-mark::after{
+    content:"";position:absolute;inset:-50%;
+    background:conic-gradient(from 0deg,transparent,rgba(255,255,255,.25),transparent 30%);
+    animation:spin 8s linear infinite;
+  }
+  .brand-mark svg{position:relative;z-index:1;width:20px;height:20px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .brand-text{display:flex;flex-direction:column;gap:2px}
+  .brand-title{font-size:15px;font-weight:600}
+  .brand-sub{font-size:11.5px;color:var(--text-3);letter-spacing:.02em}
+
+  /* source pill */
+  .source-pill{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:8px 12px 8px 8px;
+    border-radius:999px;
+    border:1px solid var(--stroke-2);
+    background:var(--glass-1);
+    backdrop-filter:blur(var(--blur-sm));
+    -webkit-backdrop-filter:blur(var(--blur-sm));
+    font-size:12.5px;
+    color:var(--text-2);
+    transition:border-color .3s var(--ease),background .3s var(--ease);
+    max-width:100%;
+  }
+  .source-pill:hover{border-color:var(--stroke-3);background:var(--glass-2)}
+  .source-avatar{
+    width:24px;height:24px;border-radius:50%;
+    border:1px solid var(--stroke-2);
+    flex:0 0 auto;
+  }
+  .source-info{display:flex;flex-direction:column;gap:1px;min-width:0}
+  .source-name{
+    font-size:12.5px;font-weight:600;color:var(--text);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .source-tag{
+    font-size:10px;color:var(--text-3);
+    text-transform:uppercase;letter-spacing:.05em;
+  }
+  .source-branch{
+    font-size:10.5px;color:var(--text-2);
+    padding:2px 7px;border-radius:5px;
+    background:rgba(255,255,255,.06);
+    border:1px solid var(--stroke-1);
+    font-family:ui-monospace,"SF Mono",Menlo,monospace;
+    flex-shrink:0;
+  }
+
+  /* ============ GLASS ============ */
+  .glass{
+    background:linear-gradient(135deg,rgba(255,255,255,.07) 0%,rgba(255,255,255,.025) 100%);
+    border:1px solid var(--stroke-1);
+    backdrop-filter:blur(var(--blur-lg)) saturate(160%);
+    -webkit-backdrop-filter:blur(var(--blur-lg)) saturate(160%);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,.1) inset,
+      0 -1px 0 rgba(0,0,0,.25) inset,
+      0 30px 60px -20px rgba(0,0,0,.7);
+    position:relative;overflow:hidden;
+  }
+  .glass::before{
+    content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+    background:linear-gradient(135deg,rgba(255,255,255,.08) 0%,transparent 40%,transparent 60%,rgba(255,255,255,.03) 100%);
+    mask:linear-gradient(#000,#000) content-box,linear-gradient(#000,#000);
+    -webkit-mask:linear-gradient(#000,#000) content-box,linear-gradient(#000,#000);
+    -webkit-mask-composite:xor;mask-composite:exclude;
+    padding:1px;
+  }
+
+  /* ============ LOADING ============ */
+  .loading-card{
+    padding:26px;
+    border-radius:var(--radius-lg);
+    animation:rise .8s var(--ease) both;
+    display:flex;align-items:center;gap:16px;
+  }
+  .spinner-large{
+    width:24px;height:24px;border-radius:50%;
+    border:2px solid rgba(255,255,255,.15);
+    border-top-color:#fff;
+    animation:spin .8s linear infinite;
+    flex-shrink:0;
+  }
+  .loading-text{font-size:14px;color:var(--text-2)}
+  .loading-text strong{color:var(--text);font-weight:600}
+
+  /* ============ REPO INFO ============ */
+  .repo-info{
+    padding:22px;
+    border-radius:var(--radius-lg);
+    margin-bottom:18px;
+    animation:rise .8s var(--ease) both;
+  }
+  .repo-info-inner{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+  .repo-avatar{
+    width:52px;height:52px;border-radius:14px;
+    border:1px solid var(--stroke-2);
+    background:rgba(255,255,255,.05);
+    flex-shrink:0;
+  }
+  .repo-text{flex:1;min-width:200px}
+  .repo-name{
+    font-size:17px;font-weight:600;
+    display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  }
+  .repo-name a{transition:opacity .2s}
+  .repo-name a:hover{opacity:.75}
+  .repo-desc{
+    font-size:13px;color:var(--text-2);
+    margin-top:4px;line-height:1.5;
+    display:-webkit-box;-webkit-line-clamp:2;
+    -webkit-box-orient:vertical;overflow:hidden;
+  }
+  .repo-stats{
+    display:flex;gap:16px;flex-wrap:wrap;
+    font-size:12px;color:var(--text-3);margin-top:6px;
+  }
+  .repo-stat{display:flex;align-items:center;gap:5px}
+  .repo-stat svg{width:13px;height:13px;opacity:.7}
+  .lang-dot{
+    width:9px;height:9px;border-radius:50%;
+    background:rgba(255,255,255,.7);
+    box-shadow:0 0 8px rgba(255,255,255,.5);
+  }
+
+  /* ============ TOOLBAR ============ */
+  .toolbar{
+    display:flex;gap:10px;align-items:center;
+    margin-bottom:12px;flex-wrap:wrap;
+    animation:rise .8s var(--ease) both;
+  }
+  .toolbar-search{flex:1;min-width:180px;position:relative}
+  .toolbar-search input{
+    width:100%;
+    padding:11px 14px 11px 38px;
+    border-radius:12px;
+    border:1px solid var(--stroke-1);
+    background:rgba(255,255,255,.03);
+    color:var(--text);
+    font-size:13px;
+    outline:none;
+    backdrop-filter:blur(var(--blur-sm));
+    -webkit-backdrop-filter:blur(var(--blur-sm));
+    transition:border-color .3s var(--ease),background .3s var(--ease),
+               box-shadow .3s var(--ease);
+  }
+  .toolbar-search input::placeholder{color:var(--text-4)}
+  .toolbar-search input:focus{
+    border-color:var(--stroke-3);
+    background:rgba(255,255,255,.05);
+    box-shadow:0 0 0 3px rgba(255,255,255,.05);
+  }
+  .toolbar-search svg{
+    position:absolute;left:12px;top:50%;transform:translateY(-50%);
+    width:14px;height:14px;color:var(--text-3);pointer-events:none;
+  }
+  .sort-wrap{position:relative}
+  .sort-wrap select{
+    appearance:none;-webkit-appearance:none;
+    padding:11px 32px 11px 14px;
+    border-radius:12px;
+    border:1px solid var(--stroke-1);
+    background:rgba(255,255,255,.03);
+    color:var(--text);
+    font-size:13px;cursor:pointer;
+    backdrop-filter:blur(var(--blur-sm));
+    -webkit-backdrop-filter:blur(var(--blur-sm));
+    transition:border-color .3s var(--ease),background .3s var(--ease);
+  }
+  .sort-wrap select:hover{border-color:var(--stroke-2)}
+  .sort-wrap select:focus{outline:none;border-color:var(--stroke-3)}
+  .sort-wrap select option{background:#111;color:#fff}
+  .sort-wrap::after{
+    content:"";position:absolute;right:13px;top:50%;
+    width:7px;height:7px;
+    border-right:1.5px solid var(--text-2);
+    border-bottom:1.5px solid var(--text-2);
+    transform:translateY(-70%) rotate(45deg);
+    pointer-events:none;
+  }
+  .toggle-inline{
+    display:inline-flex;align-items:center;gap:8px;
+    cursor:pointer;font-size:12.5px;color:var(--text-2);
+    user-select:none;padding:8px 12px;
+    border-radius:11px;
+    border:1px solid var(--stroke-1);
+    background:rgba(255,255,255,.03);
+    transition:color .3s var(--ease),border-color .3s var(--ease),
+               background .3s var(--ease);
+  }
+  .toggle-inline:hover{color:var(--text);border-color:var(--stroke-2)}
+  .toggle-inline input{position:absolute;opacity:0;pointer-events:none}
+  .toggle-inline .dot-toggle{
+    width:8px;height:8px;border-radius:50%;
+    background:var(--text-3);
+    transition:background .3s var(--ease),box-shadow .3s var(--ease);
+  }
+  .toggle-inline input:checked ~ .dot-toggle{
+    background:#fff;
+    box-shadow:0 0 8px rgba(255,255,255,.9);
+  }
+
+  /* ============ FOLDER CHIPS ============ */
+  .folder-chips{
+    display:flex;gap:8px;flex-wrap:wrap;
+    margin-bottom:14px;
+    animation:rise .6s var(--ease) both;
+  }
+  .folder-chips:empty{display:none}
+  .chip{
+    font-size:12px;
+    padding:7px 12px;
+    border-radius:999px;
+    border:1px solid var(--stroke-1);
+    background:rgba(255,255,255,.03);
+    color:var(--text-2);
+    display:inline-flex;align-items:center;gap:6px;
+    transition:color .3s var(--ease),border-color .3s var(--ease),
+               background .3s var(--ease),transform .3s var(--ease-spring);
+    font-family:ui-monospace,"SF Mono",Menlo,monospace;
+  }
+  .chip:hover{
+    color:var(--text);
+    border-color:var(--stroke-3);
+    background:rgba(255,255,255,.08);
+    transform:translateY(-1px);
+  }
+  .chip.active{
+    color:#000;background:#fff;border-color:#fff;
+  }
+
+  /* ============ LISTA ============ */
+  .files{display:grid;gap:10px;grid-template-columns:1fr}
+
+  .card{
+    --mx:50%;--my:50%;
+    position:relative;
+    display:flex;align-items:center;gap:14px;
+    padding:16px 18px;
+    border-radius:var(--radius-md);
+    background:linear-gradient(135deg,rgba(255,255,255,.055) 0%,rgba(255,255,255,.02) 100%);
+    border:1px solid var(--stroke-1);
+    backdrop-filter:blur(var(--blur-md)) saturate(160%);
+    -webkit-backdrop-filter:blur(var(--blur-md)) saturate(160%);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,.08) inset,
+      0 -1px 0 rgba(0,0,0,.2) inset,
+      0 8px 24px -12px rgba(0,0,0,.5);
+    cursor:pointer;
+    overflow:hidden;
+    transition:transform .55s var(--ease),
+               border-color .55s var(--ease),
+               background .55s var(--ease),
+               box-shadow .55s var(--ease);
+    animation:cardIn .7s var(--ease) both;
+    color:inherit;
+  }
+  .card::before{
+    content:"";position:absolute;inset:0;border-radius:inherit;
+    background:radial-gradient(500px circle at var(--mx) var(--my),
+      rgba(255,255,255,.13),transparent 45%);
+    opacity:0;transition:opacity .4s var(--ease);
+    pointer-events:none;
+  }
+  .card:hover{
+    transform:translateY(-3px);
+    border-color:rgba(255,255,255,.25);
+    background:linear-gradient(135deg,rgba(255,255,255,.1) 0%,rgba(255,255,255,.03) 100%);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,.15) inset,
+      0 -1px 0 rgba(0,0,0,.25) inset,
+      0 25px 50px -18px rgba(255,255,255,.28);
+  }
+  .card:hover::before{opacity:1}
+  .card:active{transform:translateY(-1px) scale(.997)}
+  @keyframes cardIn{
+    from{opacity:0;transform:translateY(12px) scale(.97)}
+    to{opacity:1;transform:translateY(0) scale(1)}
+  }
+
+  .card-icon{
+    width:40px;height:40px;border-radius:11px;
+    background:rgba(255,255,255,.08);
+    border:1px solid var(--stroke-1);
+    display:grid;place-items:center;
+    flex:0 0 auto;
+    transition:transform .5s var(--ease-spring),background .4s var(--ease);
+    position:relative;z-index:1;
+  }
+  .card-icon svg{width:18px;height:18px;color:var(--text)}
+  .card:hover .card-icon{
+    transform:rotate(-6deg) scale(1.08);
+    background:rgba(255,255,255,.16);
+  }
+  .card-meta{flex:1;min-width:0;position:relative;z-index:1}
+  .card-name{
+    font-size:14px;font-weight:600;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .card-sub{
+    font-size:11.5px;color:var(--text-3);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    margin-top:3px;
+    display:flex;align-items:center;gap:6px;
+    font-family:ui-monospace,"SF Mono",Menlo,monospace;
+  }
+  .card-sub .sep{opacity:.4}
+
+  .card-actions{
+    display:flex;gap:6px;align-items:center;
+    position:relative;z-index:1;flex:0 0 auto;
+  }
+  .icon-btn{
+    width:32px;height:32px;border-radius:9px;
+    display:grid;place-items:center;
+    color:var(--text-2);
+    background:rgba(255,255,255,.03);
+    border:1px solid var(--stroke-1);
+    transition:color .3s var(--ease),border-color .3s var(--ease),
+               background .3s var(--ease),transform .3s var(--ease-spring);
+  }
+  .icon-btn:hover{
+    color:#fff;border-color:var(--stroke-3);
+    background:rgba(255,255,255,.1);
+    transform:translateY(-1px);
+  }
+  .icon-btn svg{width:14px;height:14px}
+  .icon-btn.copied{color:#000;background:#fff;border-color:#fff}
+  .card-open{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:8px 14px;
+    border-radius:9px;
+    background:rgba(255,255,255,.9);
+    color:#000;font-size:12px;font-weight:600;
+    transition:background .3s var(--ease),transform .3s var(--ease-spring),
+               box-shadow .3s var(--ease);
+    box-shadow:0 4px 12px -4px rgba(255,255,255,.3);
+  }
+  .card-open:hover{
+    background:#fff;
+    transform:translateY(-1px);
+    box-shadow:0 8px 20px -6px rgba(255,255,255,.5);
+  }
+  .card-open svg{width:12px;height:12px}
+
+  /* ============ SKELETON ============ */
+  .skeleton{pointer-events:none;cursor:default}
+  .skeleton::before{display:none}
+  .skeleton-icon{
+    width:40px;height:40px;border-radius:11px;
+    background:rgba(255,255,255,.06);flex-shrink:0;
+    animation:shimmer 1.6s ease-in-out infinite;
+  }
+  .skeleton-meta{flex:1;display:flex;flex-direction:column;gap:7px}
+  .skeleton-line{
+    height:12px;border-radius:6px;
+    background:rgba(255,255,255,.06);
+    animation:shimmer 1.6s ease-in-out infinite;
+  }
+  .skeleton-line.s1{width:45%}
+  .skeleton-line.s2{width:65%;height:9px;animation-delay:.15s}
+  @keyframes shimmer{0%,100%{opacity:.4}50%{opacity:.85}}
+
+  /* ============ EMPTY / FALLBACK ============ */
+  .empty-state{
+    text-align:center;padding:56px 20px;
+    animation:rise .8s var(--ease) both;
+  }
+  .empty-icon{
+    width:72px;height:72px;border-radius:20px;
+    background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.02));
+    border:1px solid var(--stroke-1);
+    display:grid;place-items:center;
+    margin:0 auto 20px;
+    box-shadow:0 1px 0 rgba(255,255,255,.1) inset,
+               0 20px 40px -12px rgba(255,255,255,.15);
+    animation:float 4s ease-in-out infinite;
+  }
+  .empty-icon svg{width:28px;height:28px;color:var(--text-2)}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+  .empty-state h2{font-size:17px;font-weight:600;margin-bottom:8px}
+  .empty-state p{
+    font-size:13px;color:var(--text-2);line-height:1.6;
+    max-width:420px;margin:0 auto;
+  }
+  .empty-state code{
+    font-family:ui-monospace,"SF Mono",Menlo,monospace;
+    font-size:12px;padding:2px 8px;border-radius:6px;
+    background:rgba(255,255,255,.08);
+    border:1px solid var(--stroke-1);color:var(--text);
+  }
+
+  /* fallback panel */
+  .fallback{
+    padding:22px;border-radius:var(--radius-lg);
+    animation:rise .9s var(--ease) both;
+  }
+  .fallback h2{
+    font-size:15px;font-weight:600;margin-bottom:6px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .fallback h2 svg{width:16px;height:16px;color:var(--text-2)}
+  .fallback p{
+    font-size:13px;color:var(--text-2);line-height:1.6;
+    margin-bottom:16px;
+  }
+  .fallback-row{display:flex;gap:10px;flex-wrap:wrap;align-items:stretch}
+  .input-wrap{flex:1;min-width:220px;position:relative;display:flex;align-items:center}
+  .input-icon{
+    position:absolute;left:14px;top:50%;transform:translateY(-50%);
+    width:16px;height:16px;color:var(--text-3);pointer-events:none;
+    transition:color .3s var(--ease);
+  }
+  .input-wrap:focus-within .input-icon{color:var(--text)}
+  .input-wrap input{
+    width:100%;
+    padding:13px 16px 13px 42px;
+    border-radius:13px;
+    border:1px solid var(--stroke-2);
+    background:rgba(255,255,255,.035);
+    color:var(--text);
+    font-size:13.5px;
+    outline:none;
+    backdrop-filter:blur(var(--blur-sm));
+    -webkit-backdrop-filter:blur(var(--blur-sm));
+    transition:border-color .35s var(--ease),background .35s var(--ease),
+               box-shadow .35s var(--ease);
+  }
+  .input-wrap input::placeholder{color:var(--text-4)}
+  .input-wrap input:focus{
+    border-color:rgba(255,255,255,.4);
+    background:rgba(255,255,255,.06);
+    box-shadow:0 0 0 4px rgba(255,255,255,.06),
+               0 12px 30px -12px rgba(255,255,255,.2);
+  }
+  .btn{
+    padding:13px 22px;
+    border-radius:13px;
+    font-size:13.5px;font-weight:600;
+    display:inline-flex;align-items:center;gap:8px;
+    transition:transform .4s var(--ease-spring),
+               box-shadow .4s var(--ease),
+               background .4s var(--ease);
+    white-space:nowrap;
+  }
+  .btn-primary{
+    background:rgba(255,255,255,.96);
+    color:#000;
+    border:1px solid rgba(255,255,255,.9);
+    box-shadow:0 1px 0 rgba(255,255,255,.6) inset,
+               0 10px 30px -10px rgba(255,255,255,.5);
+  }
+  .btn-primary:hover{
+    transform:translateY(-2px);
+    box-shadow:0 1px 0 rgba(255,255,255,.6) inset,
+               0 20px 40px -12px rgba(255,255,255,.65);
+    background:#fff;
+  }
+  .btn-primary:active{transform:translateY(0) scale(.98)}
+  .btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none}
+  .btn .spinner{
+    width:14px;height:14px;border-radius:50%;
+    border:2px solid rgba(0,0,0,.2);
+    border-top-color:#000;
+    animation:spin .8s linear infinite;
+    display:none;
+  }
+  .btn.loading .spinner{display:block}
+  .btn.loading span{display:none}
+
+  /* ============ TOASTS ============ */
+  .toasts{
+    position:fixed;bottom:24px;right:24px;
+    display:flex;flex-direction:column;gap:10px;
+    z-index:1000;pointer-events:none;
+  }
+  .toast{
+    padding:12px 18px;border-radius:12px;
+    background:rgba(20,20,20,.85);
+    border:1px solid var(--stroke-2);
+    backdrop-filter:blur(var(--blur-md)) saturate(160%);
+    -webkit-backdrop-filter:blur(var(--blur-md)) saturate(160%);
+    color:var(--text);font-size:13px;
+    box-shadow:0 20px 40px -12px rgba(0,0,0,.8),
+               0 1px 0 rgba(255,255,255,.08) inset;
+    opacity:0;transform:translateX(30px) scale(.96);
+    transition:opacity .4s var(--ease),transform .4s var(--ease-spring);
+    display:flex;align-items:center;gap:10px;
+    max-width:340px;pointer-events:auto;
+  }
+  .toast.in{opacity:1;transform:translateX(0) scale(1)}
+  .toast-icon{width:18px;height:18px;flex-shrink:0;display:grid;place-items:center}
+  .toast.success .toast-icon{color:#7fe3a0}
+  .toast.error .toast-icon{color:#ff8686}
+  .toast.info .toast-icon{color:#8ab4ff}
+
+  /* ============ UTILS ============ */
+  .hidden{display:none !important}
+  @keyframes rise{
+    from{opacity:0;transform:translateY(14px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+
+  @media (max-width:600px){
+    .app{padding:24px 16px 80px}
+    .header{margin-bottom:22px}
+    .source-pill{padding:6px 10px 6px 6px;font-size:12px}
+    .card{padding:14px}
+    .card-open span{display:none}
+    .card-open{padding:8px 10px}
+    .toasts{right:16px;bottom:16px;left:16px}
+    .toast{max-width:none}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation-duration:.01ms !important;animation-iteration-count:1 !important;
+      transition-duration:.01ms !important}
+    .orb{opacity:.35}
+  }
+</style>
+</head>
+<body>
+
+<div class="bg" aria-hidden="true">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+<div class="bg-noise" aria-hidden="true"></div>
+<div class="cursor-glow" aria-hidden="true"></div>
+
+<main class="app">
+  <header class="header">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+             stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <path d="M8 13h8M8 17h5" opacity=".55"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <span class="brand-title">HTML Launcher</span>
+        <span class="brand-sub">este repositório</span>
+      </div>
+    </div>
+    <a class="source-pill hidden" id="sourcePill" target="_blank" rel="noopener">
+      <img class="source-avatar" id="sourceAvatar" alt="">
+      <div class="source-info">
+        <span class="source-name" id="sourceName">—</span>
+        <span class="source-tag">detectado automaticamente</span>
+      </div>
+      <span class="source-branch hidden" id="sourceBranch"></span>
+    </a>
+  </header>
+
+  <!-- Loading inicial -->
+  <section class="loading-card glass" id="loadingCard">
+    <div class="spinner-large"></div>
+    <div class="loading-text">Detectando repositório…</div>
+  </section>
+
+  <!-- Fallback -->
+  <section class="fallback glass hidden" id="fallbackCard">
+    <h2>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      Não consegui detectar o repositório
+    </h2>
+    <p id="fallbackMsg">Esta página precisa estar em uma URL do GitHub Pages (ex: <code>usuario.github.io/repo</code>) para a detecção automática funcionar.</p>
+    <div class="fallback-row">
+      <div class="input-wrap">
+        <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="7"/>
+          <path d="m21 21-3.5-3.5"/>
+        </svg>
+        <input id="manualInput" type="text" autocomplete="off" spellcheck="false"
+               placeholder="usuario/repo">
+      </div>
+      <button id="manualBtn" class="btn btn-primary" type="button">
+        <span>Carregar</span>
+        <div class="spinner"></div>
+      </button>
+    </div>
+  </section>
+
+  <section class="repo-info glass hidden" id="repoInfo"></section>
+  <section class="toolbar hidden" id="toolbar">
+    <div class="toolbar-search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="7"/>
+        <path d="m21 21-3.5-3.5"/>
+      </svg>
+      <input id="filterInput" type="text" placeholder="Filtrar arquivos…"
+             autocomplete="off" spellcheck="false">
+    </div>
+    <div class="sort-wrap">
+      <select id="sortSelect" aria-label="Ordenar">
+        <option value="name">Nome A-Z</option>
+        <option value="path">Caminho</option>
+        <option value="size">Tamanho</option>
+      </select>
+    </div>
+    <label class="toggle-inline" title="Usar htmlpreview quando o arquivo não estiver no GitHub Pages">
+      <input type="checkbox" id="optPreview" checked>
+      <span class="dot-toggle"></span>
+      <span>renderizar</span>
+    </label>
+  </section>
+
+  <div class="folder-chips" id="folderChips"></div>
+  <section class="files" id="files"></section>
+
+  <section class="empty-state hidden" id="emptyState">
+    <div class="empty-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+      </svg>
+    </div>
+    <h2 id="emptyTitle">Nada aqui</h2>
+    <p id="emptyMsg">—</p>
+  </section>
+</main>
+
+<div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+  'use strict';
+
+  /* ============ HELPERS ============ */
+  const $ = s => document.querySelector(s);
+
+  const escapeHtml = s => String(s).replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
+
+  const formatSize = bytes => {
+    if (!bytes && bytes !== 0) return '';
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / 1024 / 1024).toFixed(1) + ' MB';
+  };
+
+  const relativeTime = date => {
+    const diff = Date.now() - new Date(date).getTime();
+    const mins = Math.floor(diff / 60000);
+    if (mins < 60) return mins + 'm atrás';
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24) return hrs + 'h atrás';
+    const days = Math.floor(hrs / 24);
+    if (days < 30) return days + 'd atrás';
+    const months = Math.floor(days / 30);
+    if (months < 12) return months + 'mo atrás';
+    return Math.floor(months / 12) + 'a atrás';
+  };
+
+  const parseRepo = input => {
+    input = (input || '').trim();
+    if (!input) return null;
+    const m1 = input.match(/github\.com\/([^\/\s]+)\/([^\/\s?#]+)(?:\/tree\/([^\/\s?#]+)(\/[^\s?#]*)?)?/i);
+    if (m1) return {
+      owner: m1[1],
+      repo: m1[2].replace(/\.git$/i, ''),
+      branch: m1[3] || null,
+      path: (m1[4] || '').replace(/^\//, '')
+    };
+    const m2 = input.match(/^([^\/\s]+)\/([^\/\s]+)$/);
+    if (m2) return {
+      owner: m2[1],
+      repo: m2[2].replace(/\.git$/i, ''),
+      branch: null,
+      path: ''
+    };
+    return null;
+  };
+
+  /* ============ TOASTS ============ */
+  const icons = {
+    success: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+    error:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+    info:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
+  };
+  function toast(message, type = 'info') {
+    const el = document.createElement('div');
+    el.className = `toast ${type}`;
+    el.innerHTML = `<span class="toast-icon">${icons[type] || icons.info}</span><span>${escapeHtml(message)}</span>`;
+    $('#toasts').appendChild(el);
+    requestAnimationFrame(() => el.classList.add('in'));
+    setTimeout(() => {
+      el.classList.remove('in');
+      setTimeout(() => el.remove(), 400);
+    }, 3400);
+  }
+
+  /* ============ ESTADO ============ */
+  const state = {
+    source: null,          // { owner, repo, source, baseUrl, branch }
+    info: null,            // repo info da API
+    files: [],
+    branch: null,
+    hasPages: false,
+    pagesPrefix: '',       // prefixo do source do Pages (ex: 'docs/')
+    repoBaseUrl: null,     // '/repo/' ou '/' no github.io
+    query: '',
+    sort: 'name',
+    activeFolder: null,
+    loading: false
+  };
+
+  /* ============ API ============ */
+  async function api(url) {
+    const res = await fetch(url, { headers: { 'Accept': 'application/vnd.github+json' } });
+    if (!res.ok) {
+      if (res.status === 404) throw new Error('Não encontrado (repositório precisa ser público).');
+      if (res.status === 403) throw new Error('Limite de requisições do GitHub atingido. Tente em alguns minutos.');
+      throw new Error(`Erro da API do GitHub (${res.status}).`);
+    }
+    return res.json();
+  }
+
+  /* ============ DETECÇÃO DE ORIGEM ============ */
+  async function detectSource() {
+    const url = new URL(location.href);
+    const host = url.hostname;
+    const parts = url.pathname.split('/').filter(Boolean);
+
+    // override via ?repo=
+    const override = url.searchParams.get('repo');
+    if (override) {
+      const parsed = parseRepo(override);
+      if (parsed) return { ...parsed, source: 'manual' };
+    }
+
+    // raw.githubusercontent.com/owner/repo/branch/path
+    if (host === 'raw.githubusercontent.com' && parts.length >= 3) {
+      return { owner: parts[0], repo: parts[1], branch: parts[2], source: 'raw' };
+    }
+
+    // github.com/owner/repo[/blob/branch/path]
+    if ((host === 'github.com' || host === 'www.github.com') && parts.length >= 2) {
+      return { owner: parts[0], repo: parts[1], branch: parts[3] || null, source: 'github' };
+    }
+
+    // *.github.io
+    if (host.endsWith('.github.io')) {
+      const owner = host.slice(0, -'.github.io'.length);
+      const candidates = [];
+
+      if (parts.length > 0) {
+        candidates.push({
+          owner,
+          repo: parts[0],
+          source: 'pages',
+          baseUrl: `/${parts[0]}/`,
+          pathname: url.pathname
+        });
+      }
+      candidates.push({
+        owner,
+        repo: `${owner}.github.io`,
+        source: 'pages',
+        baseUrl: '/',
+        pathname: url.pathname
+      });
+
+      for (const c of candidates) {
+        try {
+          const res = await fetch(`https://api.github.com/repos/${c.owner}/${c.repo}`, {
+            headers: { 'Accept': 'application/vnd.github+json' }
+          });
+          if (res.ok) return c;
+        } catch {}
+      }
+    }
+
+    return null;
+  }
+
+  /* ============ CARREGAR REPO ============ */
+  async function load(source) {
+    if (state.loading) return;
+    state.loading = true;
+    hideFallback();
+    showLoading('Consultando repositório…');
+    hideEmpty();
+    $('#repoInfo').classList.add('hidden');
+    $('#toolbar').classList.add('hidden');
+    $('#folderChips').innerHTML = '';
+    $('#files').innerHTML = '';
+    $('#sourcePill').classList.add('hidden');
+    state.activeFolder = null;
+
+    try {
+      const info = await api(`https://api.github.com/repos/${source.owner}/${source.repo}`);
+      let branch = source.branch || info.default_branch;
+      let hasPages = false;
+      let pagesPrefix = '';
+
+      // Tenta /pages pra descobrir branch e prefixo reais
+      try {
+        const pages = await api(`https://api.github.com/repos/${source.owner}/${source.repo}/pages`);
+        if (pages.source) {
+          if (pages.source.branch) branch = pages.source.branch;
+          const p = pages.source.path;
+          pagesPrefix = (!p || p === '/') ? '' : p.replace(/^\/|\/$/g, '') + '/';
+          hasPages = true;
+        }
+      } catch {}
+
+      // Se estamos no github.io mas /pages falhou, ainda consideramos Pages
+      if (!hasPages && source.source === 'pages') {
+        hasPages = true;
+      }
+
+      // Carrega tree (com fallback pra gh-pages se necessário)
+      showLoading('Listando arquivos…');
+      let tree = await api(`https://api.github.com/repos/${source.owner}/${source.repo}/git/trees/${encodeURIComponent(branch)}?recursive=1`);
+      let files = (tree.tree || []).filter(f => f.type === 'blob' && /\.html?$/i.test(f.path));
+
+      if (files.length === 0 && source.source === 'pages' && branch !== 'gh-pages') {
+        try {
+          const ghTree = await api(`https://api.github.com/repos/${source.owner}/${source.repo}/git/trees/gh-pages?recursive=1`);
+          const ghFiles = (ghTree.tree || []).filter(f => f.type === 'blob' && /\.html?$/i.test(f.path));
+          if (ghFiles.length > 0) {
+            tree = ghTree;
+            files = ghFiles;
+            branch = 'gh-pages';
+          }
+        } catch {}
+      }
+
+      // Se /pages falhou, tenta deduzir prefixo comparando URL atual com o tree
+      if (source.source === 'pages' && !pagesPrefix && source.baseUrl) {
+        const currentPath = decodeURIComponent(location.pathname);
+        const currentRel = currentPath.slice(source.baseUrl.length);
+        if (currentRel && !(tree.tree || []).some(f => f.path === currentRel)) {
+          const candidates = (tree.tree || []).filter(f =>
+            f.type === 'blob' && (f.path.endsWith('/' + currentRel) || f.path === currentRel)
+          );
+          if (candidates.length > 0) {
+            const found = candidates[0].path;
+            pagesPrefix = found.slice(0, found.length - currentRel.length);
+          }
+        }
+      }
+
+      state.source = source;
+      state.info = info;
+      state.branch = branch;
+      state.hasPages = hasPages;
+      state.pagesPrefix = pagesPrefix;
+      state.repoBaseUrl = source.baseUrl || null;
+      state.files = files.map(f => {
+        const p = f.path.split('/');
+        const name = p.pop();
+        return { path: f.path, name, folder: p.join('/'), size: f.size || 0 };
+      });
+
+      hideLoading();
+      renderSourcePill();
+      renderRepoInfo();
+      renderToolbar();
+      renderFolderChips();
+      renderFiles();
+
+      if (!files.length) {
+        showEmpty('Nenhum arquivo HTML',
+                  `O repositório ${source.owner}/${source.repo} não tem arquivos .html ou .htm.`);
+      } else {
+        toast(`${files.length} arquivo(s) pronto(s).`, 'success');
+      }
+    } catch (err) {
+      hideLoading();
+      showFallback('Não consegui carregar esse repositório.', err.message);
+      toast(err.message || 'Falha ao carregar.', 'error');
+    } finally {
+      state.loading = false;
+    }
+  }
+
+  /* ============ LOADING ============ */
+  function showLoading(text) {
+    const card = $('#loadingCard');
+    card.classList.remove('hidden');
+    card.querySelector('.loading-text').textContent = text;
+  }
+  function hideLoading() {
+    $('#loadingCard').classList.add('hidden');
+  }
+  function showFallback(msg, detail) {
+    hideLoading();
+    $('#fallbackCard').classList.remove('hidden');
+    if (detail) {
+      $('#fallbackMsg').innerHTML = `${escapeHtml(detail)}<br><br>Você também pode informar manualmente:`;
+    }
+  }
+  function hideFallback() {
+    $('#fallbackCard').classList.add('hidden');
+  }
+  function showEmpty(title, msg) {
+    $('#emptyState').classList.remove('hidden');
+    $('#emptyTitle').textContent = title;
+    $('#emptyMsg').textContent = msg;
+  }
+  function hideEmpty() {
+    $('#emptyState').classList.add('hidden');
+  }
+
+  /* ============ SOURCE PILL ============ */
+  function renderSourcePill() {
+    const pill = $('#sourcePill');
+    const { source, info, branch } = state;
+    if (!source || !info) return;
+    pill.classList.remove('hidden');
+    pill.href = info.html_url;
+    $('#sourceAvatar').src = info.owner.avatar_url;
+    $('#sourceName').textContent = info.full_name;
+    const b = $('#sourceBranch');
+    b.textContent = branch;
+    b.classList.remove('hidden');
+  }
+
+  /* ============ REPO INFO ============ */
+  function renderRepoInfo() {
+    if (!state.info) return;
+    const { info } = state;
+    const wrap = $('#repoInfo');
+    wrap.classList.remove('hidden');
+    wrap.innerHTML = `
+      <div class="repo-info-inner">
+        <img class="repo-avatar" src="${escapeHtml(info.owner.avatar_url)}"
+             alt="" onerror="this.style.display='none'">
+        <div class="repo-text">
+          <div class="repo-name">
+            <a href="${escapeHtml(info.html_url)}" target="_blank" rel="noopener">
+              ${escapeHtml(info.full_name)}
+            </a>
+          </div>
+          ${info.description ? `<div class="repo-desc">${escapeHtml(info.description)}</div>` : ''}
+          <div class="repo-stats">
+            <span class="repo-stat">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              ${info.stargazers_count.toLocaleString('pt-BR')}
+            </span>
+            <span class="repo-stat">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="18" r="3"/><circle cx="18" cy="6" r="3"/><path d="M6 15V9a6 6 0 0 1 6-6h3M18 9v6a6 6 0 0 1-6 6h-3"/></svg>
+              ${info.forks_count.toLocaleString('pt-BR')}
+            </span>
+            ${info.language ? `<span class="repo-stat"><span class="lang-dot"></span>${escapeHtml(info.language)}</span>` : ''}
+            <span class="repo-stat">Atualizado ${relativeTime(info.updated_at)}</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  /* ============ TOOLBAR / CHIPS ============ */
+  function renderToolbar() { $('#toolbar').classList.remove('hidden'); }
+
+  function renderFolderChips() {
+    const folders = Array.from(new Set(state.files.map(f => f.folder).filter(Boolean))).sort();
+    const wrap = $('#folderChips');
+    if (!folders.length) { wrap.innerHTML = ''; return; }
+    wrap.innerHTML =
+      `<button class="chip ${!state.activeFolder ? 'active' : ''}" data-folder="">Todos</button>` +
+      folders.map(f =>
+        `<button class="chip ${state.activeFolder === f ? 'active' : ''}"
+                 data-folder="${escapeHtml(f)}">${escapeHtml(f)}</button>`
+      ).join('');
+    wrap.querySelectorAll('.chip').forEach(c => {
+      c.addEventListener('click', () => {
+        state.activeFolder = c.dataset.folder || null;
+        renderFolderChips();
+        renderFiles();
+      });
+    });
+  }
+
+  /* ============ URLS DOS ARQUIVOS ============ */
+  function rawUrlOf(file) {
+    const s = state.source;
+    const encoded = file.path.split('/').map(encodeURIComponent).join('/');
+    return `https://raw.githubusercontent.com/${s.owner}/${s.repo}/${state.branch}/${encoded}`;
+  }
+
+  function pagesUrlOf(file) {
+    if (!state.hasPages || !state.repoBaseUrl) return null;
+    let rel = file.path;
+    if (state.pagesPrefix) {
+      if (!rel.startsWith(state.pagesPrefix)) return null;
+      rel = rel.slice(state.pagesPrefix.length);
+    }
+    const encoded = rel.split('/').map(encodeURIComponent).join('/');
+    return `${location.origin}${state.repoBaseUrl}${encoded}`;
+  }
+
+  function openUrlOf(file) {
+    const pages = pagesUrlOf(file);
+    if (pages) return pages;
+    const raw = rawUrlOf(file);
+    return $('#optPreview').checked ? `https://htmlpreview.github.io/?${raw}` : raw;
+  }
+
+  /* ============ LISTA ============ */
+  function getVisibleFiles() {
+    let files = state.files;
+    if (state.activeFolder) files = files.filter(f => f.folder === state.activeFolder);
+    if (state.query) {
+      const q = state.query.toLowerCase();
+      files = files.filter(f => f.path.toLowerCase().includes(q));
+    }
+    const s = state.sort;
+    return [...files].sort((a, b) => {
+      if (s === 'size') return (b.size || 0) - (a.size || 0);
+      if (s === 'path') return a.path.localeCompare(b.path);
+      return a.name.localeCompare(b.name);
+    });
+  }
+
+  function renderFiles() {
+    const files = getVisibleFiles();
+    const wrap = $('#files');
+    wrap.innerHTML = '';
+
+    if (!files.length) {
+      showEmpty('Nada por aqui', 'Ajuste os filtros ou limpe a busca para ver todos os arquivos.');
+      return;
+    }
+    hideEmpty();
+
+    files.forEach((f, i) => {
+      const openUrl = openUrlOf(f);
+      const rawUrl = rawUrlOf(f);
+      const pages = pagesUrlOf(f);
+
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.style.animationDelay = Math.min(i * 35, 350) + 'ms';
+      card.setAttribute('role', 'button');
+      card.setAttribute('tabindex', '0');
+      card.setAttribute('title', openUrl);
+
+      card.innerHTML = `
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <path d="M8 13h8M8 17h5" opacity=".5"/>
+          </svg>
+        </div>
+        <div class="card-meta">
+          <div class="card-name"></div>
+          <div class="card-sub">
+            ${f.folder ? `<span>${escapeHtml(f.folder)}</span><span class="sep">·</span>` : ''}
+            <span>${formatSize(f.size)}</span>
+            ${pages ? '<span class="sep">·</span><span>pages</span>' : ''}
+          </div>
+        </div>
+        <div class="card-actions">
+          <button class="icon-btn copy-btn" title="Copiar link" aria-label="Copiar link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+          </button>
+          <a class="card-open" href="${escapeHtml(rawUrl)}" target="_blank"
+             rel="noopener" title="Ver código">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="16 18 22 12 16 6"/>
+              <polyline points="8 6 2 12 8 18"/>
+            </svg>
+            <span>código</span>
+          </a>
+        </div>
+      `;
+      card.querySelector('.card-name').textContent = f.name;
+
+      const open = () => window.open(openUrl, '_blank', 'noopener');
+      card.addEventListener('click', e => {
+        if (e.target.closest('.copy-btn')) return;
+        if (e.target.closest('.card-open')) return;
+        open();
+      });
+      card.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
+      });
+
+      const copyBtn = card.querySelector('.copy-btn');
+      copyBtn.addEventListener('click', async e => {
+        e.stopPropagation();
+        try {
+          await navigator.clipboard.writeText(openUrl);
+          copyBtn.classList.add('copied');
+          copyBtn.innerHTML = icons.success;
+          toast('Link copiado!', 'success');
+          setTimeout(() => {
+            copyBtn.classList.remove('copied');
+            copyBtn.innerHTML = `
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+              </svg>`;
+          }, 1400);
+        } catch {
+          toast('Não foi possível copiar.', 'error');
+        }
+      });
+
+      card.addEventListener('mousemove', e => {
+        const r = card.getBoundingClientRect();
+        card.style.setProperty('--mx', ((e.clientX - r.left) / r.width) * 100 + '%');
+        card.style.setProperty('--my', ((e.clientY - r.top) / r.height) * 100 + '%');
+      });
+
+      wrap.appendChild(card);
+    });
+  }
+
+  /* ============ CURSOR GLOW ============ */
+  let raf = null, lx = 0, ly = 0;
+  document.addEventListener('mousemove', e => {
+    lx = e.clientX; ly = e.clientY;
+    if (raf) return;
+    raf = requestAnimationFrame(() => {
+      document.documentElement.style.setProperty('--cursor-x', lx + 'px');
+      document.documentElement.style.setProperty('--cursor-y', ly + 'px');
+      raf = null;
+    });
+  }, { passive: true });
+
+  /* ============ EVENTOS ============ */
+  $('#filterInput').addEventListener('input', e => {
+    state.query = e.target.value.trim();
+    renderFiles();
+  });
+  $('#sortSelect').addEventListener('change', e => {
+    state.sort = e.target.value;
+    renderFiles();
+  });
+  $('#optPreview').addEventListener('change', renderFiles);
+
+  $('#manualBtn').addEventListener('click', () => {
+    const parsed = parseRepo($('#manualInput').value);
+    if (!parsed) {
+      toast('Formato inválido. Use usuario/repo.', 'error');
+      return;
+    }
+    load({ ...parsed, source: 'manual' });
+  });
+  $('#manualInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') $('#manualBtn').click();
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === '/' && document.activeElement.tagName !== 'INPUT' &&
+        document.activeElement.tagName !== 'SELECT') {
+      e.preventDefault();
+      const target = state.source ? $('#filterInput') : $('#manualInput');
+      target.focus();
+    }
+    if (e.key === 'Escape' && document.activeElement === $('#filterInput')) {
+      $('#filterInput').value = '';
+      state.query = '';
+      renderFiles();
+      $('#filterInput').blur();
+    }
+  });
+
+  /* ============ INIT ============ */
+  (async function init() {
+    // Feedback de status no loading
+    const loadingText = document.querySelector('#loadingCard .loading-text');
+    try {
+      const source = await detectSource();
+      if (!source) {
+        hideLoading();
+        showFallback('Esta página não parece estar em um repositório do GitHub.');
+        return;
+      }
+      if (loadingText) loadingText.textContent = `Detectado: ${source.owner}/${source.repo}`;
+      await load(source);
+    } catch (err) {
+      hideLoading();
+      showFallback('Falha ao detectar o repositório.', err.message);
+    }
+  })();
+})();
+</script>
+</body>
+</html>
