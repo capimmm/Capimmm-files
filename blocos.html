@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grade</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #170F1F;
+    --block: #231A2E;
+    --block-border: #332543;
+    --glow: #FFB067;
+    --glow-soft: #B97A4A;
+    --text: #F3ECE3;
+    --text-dim: #B8ADC2;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    overflow: hidden;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    color: var(--text);
+  }
+
+  #grid {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    z-index: 0;
+  }
+
+  .block {
+    background: var(--block);
+    border: 1px solid var(--block-border);
+    transition: background 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  }
+
+  main {
+    position: relative;
+    z-index: 1;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px;
+    pointer-events: none;
+  }
+
+  .eyebrow {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    margin-bottom: 18px;
+    letter-spacing: 0.02em;
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: clamp(2.2rem, 6vw, 4.2rem);
+    line-height: 1.08;
+    max-width: 16ch;
+    text-wrap: balance;
+  }
+
+  h1 em {
+    font-style: italic;
+    font-weight: 300;
+    color: var(--glow);
+  }
+
+  p.sub {
+    margin-top: 22px;
+    max-width: 46ch;
+    color: var(--text-dim);
+    font-size: 1.05rem;
+    line-height: 1.6;
+  }
+
+  .hint {
+    position: absolute;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    opacity: 0.7;
+  }
+
+  #toast {
+    position: fixed;
+    top: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    background: rgba(35, 26, 46, 0.9);
+    border: 1px solid var(--block-border);
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    color: var(--text);
+    backdrop-filter: blur(6px);
+    opacity: 1;
+    transition: opacity 0.8s ease;
+  }
+
+  #toast strong {
+    color: var(--glow);
+    font-weight: 500;
+  }
+
+  #toast.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  #hotbar {
+    position: fixed;
+    top: 50%;
+    right: 20px;
+    transform: translate(120%, -50%);
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 18px 16px;
+    background: rgba(23, 15, 31, 0.85);
+    border: 1px solid var(--block-border);
+    border-radius: 16px;
+    backdrop-filter: blur(8px);
+    transition: transform 0.35s ease;
+  }
+
+  #hotbar.open {
+    transform: translate(0, -50%);
+  }
+
+  #hotbar .label {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    text-align: center;
+    margin-bottom: 2px;
+  }
+
+  .swatch {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.15);
+    cursor: pointer;
+    padding: 0;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+  }
+
+  .swatch:hover {
+    transform: scale(1.12);
+  }
+
+  .swatch.active {
+    border-color: var(--text);
+  }
+
+  .swatch.rgb {
+    background: conic-gradient(red, yellow, lime, cyan, blue, magenta, red);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .block { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="grid"></div>
+
+<main>
+  <div class="eyebrow">um fundo que reage a você</div>
+  <h1>Cada bloco guarda uma <em>luz</em> que só acende perto de você</h1>
+  <p class="sub">Mova o cursor pela tela. O brilho segue você, se espalha pelos vizinhos e apaga devagar quando você passa longe.</p>
+</main>
+
+<div class="hint">mova o mouse</div>
+
+<div id="toast">aperte <strong>K</strong> para abrir a barra de cores</div>
+
+<div id="hotbar">
+  <div class="label">cor do brilho</div>
+  <button class="swatch active" style="background:#FFB067" data-glow="#FFB067" data-soft="#B97A4A" title="Âmbar"></button>
+  <button class="swatch" style="background:#FF6FA5" data-glow="#FF6FA5" data-soft="#B3487A" title="Rosa"></button>
+  <button class="swatch" style="background:#5FA8FF" data-glow="#5FA8FF" data-soft="#3A6FB3" title="Azul"></button>
+  <button class="swatch" style="background:#63D68B" data-glow="#63D68B" data-soft="#3F9963" title="Verde"></button>
+  <button class="swatch" style="background:#B78CFF" data-glow="#B78CFF" data-soft="#7C5AC7" title="Roxo"></button>
+  <button class="swatch" style="background:#FFFFFF" data-glow="#FFFFFF" data-soft="#C9C9C9" title="Branco"></button>
+  <button class="swatch rgb" id="rgbSwatch" title="RGB"></button>
+</div>
+
+<script>
+  const gridEl = document.getElementById('grid');
+  const SIZE = 46; // tamanho alvo de cada bloco em px
+
+  let cols, rows, blocks = [];
+
+  function buildGrid() {
+    gridEl.innerHTML = '';
+    blocks = [];
+
+    cols = Math.ceil(window.innerWidth / SIZE);
+    rows = Math.ceil(window.innerHeight / SIZE);
+
+    gridEl.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+    gridEl.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+
+    const frag = document.createDocumentFragment();
+
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const div = document.createElement('div');
+        div.className = 'block';
+        frag.appendChild(div);
+        blocks.push({ el: div, r, c });
+      }
+    }
+    gridEl.appendChild(frag);
+  }
+
+  buildGrid();
+  window.addEventListener('resize', buildGrid);
+
+  const RADIUS = 3.2;        // alcance do brilho de hover, em "células"
+  const RIPPLE_DURATION = 750; // duração do pulso de clique, em ms
+  const RIPPLE_MAX_RADIUS = 9;  // até onde a onda do clique se espalha
+  const RIPPLE_BAND = 1.4;      // largura da frente de onda
+
+  let mouseX = -999, mouseY = -999;
+  let ripples = []; // { col, row, start }
+  let loopRunning = false;
+
+  function cellCoords(px, py) {
+    const cellW = window.innerWidth / cols;
+    const cellH = window.innerHeight / rows;
+    return { col: px / cellW, row: py / cellH };
+  }
+
+  function render() {
+    const { col: mCol, row: mRow } = cellCoords(mouseX, mouseY);
+    const now = performance.now();
+
+    ripples = ripples.filter(r => now - r.start < RIPPLE_DURATION);
+
+    for (const b of blocks) {
+      // brilho de hover: mais forte perto do cursor
+      const hdx = (b.c + 0.5) - mCol;
+      const hdy = (b.r + 0.5) - mRow;
+      const hDist = Math.sqrt(hdx * hdx + hdy * hdy);
+      const hoverAlpha = hDist < RADIUS ? Math.pow(1 - hDist / RADIUS, 2) : 0;
+
+      // brilho extra: onda expandindo a partir de cada clique recente
+      let rippleAlpha = 0;
+      for (const r of ripples) {
+        const t = (now - r.start) / RIPPLE_DURATION; // 0 -> 1
+        const ringRadius = t * RIPPLE_MAX_RADIUS;
+        const fade = 1 - t;
+        const rdx = (b.c + 0.5) - r.col;
+        const rdy = (b.r + 0.5) - r.row;
+        const dist = Math.sqrt(rdx * rdx + rdy * rdy);
+        const band = Math.max(0, 1 - Math.abs(dist - ringRadius) / RIPPLE_BAND);
+        rippleAlpha = Math.max(rippleAlpha, band * fade);
+      }
+
+      const alpha = Math.min(1, Math.max(hoverAlpha, rippleAlpha * 1.15));
+
+      if (alpha > 0.01) {
+        b.el.style.background = `color-mix(in srgb, var(--glow) ${(alpha * 55).toFixed(1)}%, var(--block))`;
+        b.el.style.borderColor = `color-mix(in srgb, var(--glow) ${(alpha * 90).toFixed(1)}%, var(--block-border))`;
+        b.el.style.boxShadow = `0 0 ${(alpha * 26).toFixed(1)}px color-mix(in srgb, var(--glow-soft) ${(alpha * 85).toFixed(1)}%, transparent)`;
+      } else if (b.el.style.background !== '') {
+        b.el.style.background = '';
+        b.el.style.borderColor = '';
+        b.el.style.boxShadow = '';
+      }
+    }
+
+    if (ripples.length > 0) {
+      requestAnimationFrame(render);
+    } else {
+      loopRunning = false;
+    }
+  }
+
+  function kickLoop() {
+    if (!loopRunning) {
+      loopRunning = true;
+      requestAnimationFrame(render);
+    }
+  }
+
+  window.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    kickLoop();
+  });
+
+  window.addEventListener('mouseleave', () => {
+    mouseX = -999;
+    mouseY = -999;
+    kickLoop();
+  });
+
+  window.addEventListener('click', (e) => {
+    if (e.target.closest('#hotbar')) return; // clique nos botões não gera onda
+    const { col, row } = cellCoords(e.clientX, e.clientY);
+    ripples.push({ col, row, start: performance.now() });
+    kickLoop();
+  });
+
+  // --- mensagem de aviso, some sozinha depois de 5s ---
+  const toast = document.getElementById('toast');
+  setTimeout(() => toast.classList.add('hidden'), 5000);
+
+  // --- hotbar: abre/fecha com a tecla K ---
+  const hotbar = document.getElementById('hotbar');
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key.toLowerCase() === 'k') {
+      hotbar.classList.toggle('open');
+    }
+  });
+
+  // --- troca de cor do brilho ---
+  const root = document.documentElement;
+  let rgbMode = false;
+  let rgbRAF = null;
+
+  function setActiveSwatch(el) {
+    document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function rgbTick(t) {
+    const hue = (t / 25) % 360;
+    root.style.setProperty('--glow', `hsl(${hue} 90% 65%)`);
+    root.style.setProperty('--glow-soft', `hsl(${hue} 80% 45%)`);
+    if (rgbMode) rgbRAF = requestAnimationFrame(rgbTick);
+  }
+
+  document.querySelectorAll('.swatch[data-glow]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      rgbMode = false;
+      if (rgbRAF) cancelAnimationFrame(rgbRAF);
+      root.style.setProperty('--glow', btn.dataset.glow);
+      root.style.setProperty('--glow-soft', btn.dataset.soft);
+      setActiveSwatch(btn);
+    });
+  });
+
+  document.getElementById('rgbSwatch').addEventListener('click', (e) => {
+    rgbMode = true;
+    setActiveSwatch(e.target);
+    requestAnimationFrame(rgbTick);
+  });
+</script>
+
+</body>
+</html>
