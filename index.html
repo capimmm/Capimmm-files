@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#000000">
 <title>HTML Launcher · este repositório</title>
+<!-- FAVICON COM A LOGO -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23e5e5e5' rx='20'/><path d='M 20 80 L 80 20 L 80 50 L 50 80 Z' fill='%23000'/><path d='M 80 20 L 80 80 L 50 80 Z' fill='%23333'/><circle cx='20' cy='55' r='12' fill='%23000'/><path d='M 40 80 L 50 68 L 60 80 Z' fill='%23fff'/></svg>">
+
 <style>
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
@@ -170,7 +173,7 @@
   .repo-stat svg{width:13px;height:13px;opacity:.7}
   .lang-dot{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.7);box-shadow:0 0 8px rgba(255,255,255,.5)}
 
-  /* ============ TOOLBAR (Z-INDEX FIX) ============ */
+  /* ============ TOOLBAR ============ */
   .toolbar{display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap;animation:rise .8s var(--ease) both;position:relative;z-index:100;}
   .toolbar-search{flex:1;min-width:180px;position:relative}
   .toolbar-search input{
@@ -475,7 +478,7 @@
   <header class="header">
     <div class="brand">
       <div class="brand-mark" aria-hidden="true">
-        <!-- Nova Logo baseada na imagem -->
+        <!-- Logo -->
         <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M 20 80 L 80 20 L 80 50 L 50 80 Z" fill="#000" />
           <path d="M 80 20 L 80 80 L 50 80 Z" fill="#333" />
@@ -600,8 +603,9 @@
 
 <!-- Pix Widget -->
 <div class="pix-widget" title="Pix">
-  <img src="./pix.jpg" alt="Pix" class="pix-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
-  <span class="pix-label" style="display:none; color:red; font-size:10px;">Falta pix.jpg</span>
+  <!-- ARQUIVO CORRIGIDO PARA pix.jpeg -->
+  <img src="./pix.jpeg" alt="Pix" class="pix-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+  <span class="pix-label" style="display:none; color:red; font-size:10px;">Falta pix.jpeg</span>
   <span class="pix-label">Pix</span>
 </div>
 
@@ -744,7 +748,6 @@
       let files = (tree.tree || []).filter(f => {
         if (f.type !== 'blob' || !fileRegex.test(f.path)) return false;
         
-        // REGRA DA PASTA "files/"
         if (!f.path.toLowerCase().startsWith('files/')) return false;
 
         const name = f.path.split('/').pop().toLowerCase();
@@ -758,7 +761,6 @@
       state.files = files.map(f => {
         const p = f.path.split('/');
         const name = p.pop();
-        // Remove a palavra "files" do caminho exibido na interface para ficar mais limpo
         const folder = p.join('/').replace(/^files\/?/, ''); 
         return { path: f.path, name, folder, size: f.size || 0, ext: name.split('.').pop().toLowerCase() };
       });
@@ -818,7 +820,6 @@
   function renderToolbar() { $('#toolbar').classList.remove('hidden'); }
 
   function renderFolderChips() {
-    // Só mostra chips se houver subpastas DENTRO da pasta "files"
     const folders = Array.from(new Set(state.files.map(f => f.folder).filter(Boolean))).sort();
     const wrap = $('#folderChips');
     if (!folders.length) { wrap.innerHTML = ''; return; }
